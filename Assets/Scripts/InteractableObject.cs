@@ -10,7 +10,7 @@ public class InteractableObject : MonoBehaviour {
 	public event Action Gaze = () => {};
 	public event Action GazeExit = () => {};
 
-	public event Action Press = () => {};
+	public event Action<RaycastHit> Press = (hit) => {};
 	public event Action Hold = () => {};
 	public event Action Release = () => {};
 
@@ -43,9 +43,9 @@ public class InteractableObject : MonoBehaviour {
 		Debug.Log("Gaze Exit!");
 	}
 
-	public void OnPress()
+	public void OnPress(RaycastHit hit)
 	{
-		Press();
+		Press(hit);
 		Debug.Log("Pressed button!");
 	}
 

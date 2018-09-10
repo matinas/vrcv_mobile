@@ -10,6 +10,8 @@ public class GazeSystem : MonoBehaviour {
 
 	private bool beingPressed;
 
+	private RaycastHit currentHit;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -27,21 +29,20 @@ public class GazeSystem : MonoBehaviour {
 	void ProcessGaze()
 	{
 		Ray raycastRay = new Ray(transform.position, transform.forward);
-
-		RaycastHit hitInfo;
+		
 		InteractableObject lastInteractable;
 
 		Debug.DrawRay(raycastRay.origin, raycastRay.direction * 100, Color.blue);
 
-		if (Physics.Raycast(raycastRay, out hitInfo))
+		if (Physics.Raycast(raycastRay, out currentHit))
 		{
-			if ((lastInteractable = hitInfo.transform.gameObject.GetComponentInChildren<InteractableObject>()) != null)
+			if ((lastInteractable = currentHit.transform.gameObject.GetComponentInParent<InteractableObject>()) != null)
 			{
 				if ((currentInteractable == null) || (currentInteractable != lastInteractable)) // A new Interactable object was gazed
 				{
 					if (currentInteractable != null)
 						currentInteractable.OnGazeExit();
-						
+
 					currentInteractable = lastInteractable;
 					currentInteractable.OnGazeEnter();
 					reticle.OnGazeEnter();
@@ -51,36 +52,28 @@ public class GazeSystem : MonoBehaviour {
 					currentInteractable.OnGaze();
 				}
 			}
-			else
+			else if (currentInteractable != null) // An Interactable object is not being gazed anymore
 			{
-				if (currentInteractable != null) // An Interactable object is not being gazed anymore
-				{
-					currentInteractable.OnGazeExit();
-					currentInteractable = null;
-					reticle.OnGazeExit();
-				}
+				currentInteractable.OnGazeExit();
+				currentInteractable = null;
+				reticle.OnGazeExit();
 			}
 		}
 
-		if (Input.GetMouseButtonDown(0) && currentInteractable != null)
+		if (Input.GetMouseButtonDown(0) && currentInteractable != null) // Unity treats GetMouseButtonDown the same way as if the VR headset's trigger
+																		// is pressed (0 as parameter = left click = single headset button)
 		{
-			currentInteractable.OnPress();
+			currentInteractable.OnPress(currentHit);
 			beingPressed = true;
 		}
-		else
+		else if (Input.GetMouseButtonUp(0) && currentInteractable != null)
 		{
-			if (Input.GetMouseButtonUp(0) && currentInteractable != null)
-			{
-				currentInteractable.OnRelease();
-				beingPressed = false;
-			}
-			else
-			{
-				if (beingPressed && currentInteractable != null)
-				{
-					currentInteractable.OnHold();
-				}
-			}
+			currentInteractable.OnRelease();
+			beingPressed = false;
+		}
+		else if (beingPressed && currentInteractable != null)
+		{
+			currentInteractable.OnHold();
 		}
 	}
 }
