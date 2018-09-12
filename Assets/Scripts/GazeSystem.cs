@@ -73,7 +73,7 @@ public class GazeSystem : MonoBehaviour {
 		}
 		else if (beingPressed && currentInteractable != null)
 		{
-			currentInteractable.OnHold();
+			currentInteractable.OnHold(currentHit);
 		}
 	}
 }
