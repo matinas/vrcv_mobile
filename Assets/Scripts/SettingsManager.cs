@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum SelectionMode { TIMER, CLICK };
-public enum LocomotionMode { TELEPORT, WALK };
+public enum LocomotionMode { NONE, TELEPORT, WALK };
 
 public class SettingsManager : MonoBehaviour {
 
@@ -12,7 +12,9 @@ public class SettingsManager : MonoBehaviour {
 
 	public LocomotionMode currentLocomotionMode;
 
-	public Button timerButton, clickButton, teleportButton, walkButton;
+	public bool creationModeEnabled;
+
+	public Button timerButton, clickButton, teleportButton, walkButton, onButton, offButton;
 
 	public static SettingsManager instance = null;
 
@@ -23,6 +25,7 @@ public class SettingsManager : MonoBehaviour {
 			Destroy(instance);
 		}
 
+		creationModeEnabled = false;
 		instance = this;
 	}
 
@@ -37,10 +40,8 @@ public class SettingsManager : MonoBehaviour {
 	{
 		if (currentSelectionMode != (SelectionMode) sm)
 		{
-			if (currentSelectionMode == SelectionMode.TIMER)
-				timerButton.interactable = true;
-			else
-				clickButton.interactable = true;
+			timerButton.interactable = currentSelectionMode == SelectionMode.TIMER;
+			clickButton.interactable = currentSelectionMode == SelectionMode.CLICK;
 				
 			currentSelectionMode = (SelectionMode) sm;
 		}
@@ -50,12 +51,34 @@ public class SettingsManager : MonoBehaviour {
 	{
 		if (currentLocomotionMode != (LocomotionMode) lm)
 		{
-			if (currentLocomotionMode == LocomotionMode.TELEPORT)
-				teleportButton.interactable = true;
+			if (currentLocomotionMode == LocomotionMode.NONE)
+			{
+				teleportButton.interactable = !((LocomotionMode) lm == LocomotionMode.TELEPORT);
+				walkButton.interactable = !((LocomotionMode) lm == LocomotionMode.WALK);
+			}
 			else
-				walkButton.interactable = true;
+			{
+				teleportButton.interactable = currentLocomotionMode == LocomotionMode.TELEPORT;
+				walkButton.interactable = currentLocomotionMode == LocomotionMode.WALK;
+			}
 
 			currentLocomotionMode = (LocomotionMode) lm;
+
+			creationModeEnabled = false;
+			onButton.interactable = !creationModeEnabled;
+			offButton.interactable = creationModeEnabled;
 		}
+	}
+
+	public void SetCreationMode(bool enabled)
+	{
+		creationModeEnabled = enabled;
+		currentLocomotionMode = LocomotionMode.NONE;
+
+		teleportButton.interactable	= true;
+		walkButton.interactable = true;
+
+		onButton.interactable = !creationModeEnabled;
+		offButton.interactable = creationModeEnabled;
 	}
 }
