@@ -7,7 +7,7 @@ using UnityEngine;
 public class InteractableObject : MonoBehaviour {
 
 	public event Action GazeEnter = () => {};
-	public event Action Gaze = () => {};
+	public event Action<RaycastHit> Gaze = (hit) => {};
 	public event Action GazeExit = () => {};
 
 	public event Action<RaycastHit> Press = (hit) => {};
@@ -31,9 +31,9 @@ public class InteractableObject : MonoBehaviour {
 		Debug.Log("Gaze Enter!");
 	}
 
-	public void OnGaze()
+	public void OnGaze(RaycastHit hit)
 	{
-		Gaze();
+		Gaze(hit);
 		Debug.Log("Gaze!");
 	}
 
