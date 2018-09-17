@@ -49,7 +49,7 @@ public class GazeSystem : MonoBehaviour {
 				}
 				else // Same Interactable object is being gazed
 				{
-					currentInteractable.OnGaze();
+					currentInteractable.OnGaze(currentHit);
 				}
 			}
 			else if (currentInteractable != null) // An Interactable object is not being gazed anymore
