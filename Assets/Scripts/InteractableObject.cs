@@ -14,17 +14,6 @@ public class InteractableObject : MonoBehaviour {
 	public event Action<RaycastHit> Hold = (hit) => {};
 	public event Action Release = () => {};
 
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	public void OnGazeEnter()
 	{
 		GazeEnter();

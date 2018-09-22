@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public enum SelectionMode { TIMER, CLICK };
 public enum LocomotionMode { NONE, TELEPORT, WALK };
 
-public enum CreationMode { NONE, CREATE, MOVE, ROTATE, RESIZE };
+public enum CreationMode { NONE, CREATE, MOVE, ROTATE, RESIZE, UIDRAG };
 
 public class PlayerManager : MonoBehaviour {
 
@@ -40,7 +40,7 @@ public class PlayerManager : MonoBehaviour {
 	private Vector3 iniScale;
 
 	public float rotSpeed = 1.0f;
-	public float scaleFactor = 0.1f;
+	public float scaleSpeed = 0.1f;
 
 	public float minScale = 0.5f, maxScale = 5.0f;
 
@@ -181,29 +181,27 @@ public class PlayerManager : MonoBehaviour {
 
 	void ResizeObject()
 	{
-		// What follows gives almost the same result but it's done purely with vectorial algebra (dots and cross products)
+		// What follows gives almost the same result as the commented code below but it's done purely with vectorial algebra (dots and cross products)
 
 		// Project both vectors to the Camera's (Y,Z) plane
-		Vector3 prevRotProj = Vector3.ProjectOnPlane(prevRot,Camera.main.transform.right);
-		Vector3 angleProj = Vector3.ProjectOnPlane(Camera.main.transform.forward,Camera.main.transform.right);  
+		Vector3 prevRotProj = Vector3.ProjectOnPlane(prevRot, Camera.main.transform.right);
+		Vector3 currentRotProj = Vector3.ProjectOnPlane(Camera.main.transform.forward, Camera.main.transform.right);  
 
-		float angle = Vector3.Angle(prevRotProj, angleProj);
+		float angle = Vector3.Angle(prevRotProj, currentRotProj);
 
 		// Check whether we are "above" (we are enlarging the object) or "below" (we are shrinking
 		// the object) initial forward vector and update the scale accordingly
 		
-		Vector3 cross = Vector3.Cross(prevRotProj,angleProj);
-		currentObject.transform.localScale = Vector3.Dot(cross,Camera.main.transform.right) < 0 ? Vector3.Min(iniScale * (1.0f + angle * scaleFactor), maxScaleVec) :
-																								  Vector3.Max(minScaleVec, iniScale - new Vector3(angle,angle,angle) * scaleFactor); 
+		Vector3 cross = Vector3.Cross(prevRotProj,currentRotProj);
+		currentObject.transform.localScale = Vector3.Dot(cross,Camera.main.transform.right) < 0 ? Vector3.Min(iniScale * (1.0f + angle * scaleSpeed), maxScaleVec) :
+																								  Vector3.Max(minScaleVec, iniScale * (1.0f - angle * scaleSpeed)); 
 
 		// Vector3 difRotation = prevRot - Camera.main.transform.localEulerAngles;
-
 		// if (difRotation.x >= 0)
 		// 	currentObject.transform.localScale = iniScale * (1.0f + difRotation.x * scaleFactor);
 		// else
 		// {
 		// 	Vector3 scale = new Vector3(difRotation.x,difRotation.x,difRotation.x) * scaleFactor;
-
 		// 	currentObject.transform.localScale = Vector3.Max(new Vector3(0.25f,0.25f,0.25f), iniScale + scale); 
 		// }
 	}

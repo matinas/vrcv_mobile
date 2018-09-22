@@ -27,7 +27,7 @@ public class InteractableItem : MonoBehaviour {
 		System.Delegate[] deletegates = OnItemSelected.GetInvocationList();
         for (int i = 0; i < deletegates.Length; i++)
         {
-            //Remove all events
+            // Remove all events
             OnItemSelected -= deletegates[i] as Action<GameObject>;
         }
 	}
