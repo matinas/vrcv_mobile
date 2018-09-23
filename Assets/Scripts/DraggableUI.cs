@@ -21,6 +21,7 @@ public class DraggableUI : MonoBehaviour {
 		io.GazeEnter += HandleGazeEnter;
 		io.GazeExit += HandleGazeExit;
 		io.Press += HandlePress;
+		io.Release += HandleRelease;
 	}
 	
 	// Update is called once per frame
@@ -46,5 +47,10 @@ public class DraggableUI : MonoBehaviour {
 		offset = hit.point - transform.position;
 
 		gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+	}
+	
+	void HandleRelease()
+	{
+		Debug.Log("panel released");
 	}
 }

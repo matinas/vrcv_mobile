@@ -41,11 +41,16 @@ public class GazeSystem : MonoBehaviour {
 				if ((currentInteractable == null) || (currentInteractable != lastInteractable)) // A new Interactable object was gazed
 				{
 					if (currentInteractable != null)
+					{
 						currentInteractable.OnGazeExit();
+						reticle.OnGazeExit();
+					}
 
 					currentInteractable = lastInteractable;
 					currentInteractable.OnGazeEnter();
-					reticle.OnGazeEnter();
+
+					if (currentInteractable.gameObject.tag != "Wall") // Quick fix to make the reticle not to animate when hitting a wall
+						reticle.OnGazeEnter();
 				}
 				else // Same Interactable object is being gazed
 				{
@@ -56,6 +61,7 @@ public class GazeSystem : MonoBehaviour {
 			{
 				currentInteractable.OnGazeExit();
 				currentInteractable = null;
+
 				reticle.OnGazeExit();
 			}
 		}

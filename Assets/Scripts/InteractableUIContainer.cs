@@ -29,7 +29,6 @@ public class InteractableUIContainer : MonoBehaviour {
 
 				go.transform.localPosition = new Vector3(hit.point.x, pos.y, hit.point.z);
 				go.transform.eulerAngles = new Vector3(0.0f, transform.eulerAngles.y, 0.0f);
-				
 			}
 		}
 	}

@@ -5,10 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(InteractableObject))]
 public class ManipulableObject : MonoBehaviour {
 
+	public string labelText;
+
 	void Awake()
 	{
 		InteractableObject io = GetComponent<InteractableObject>();
 
+		io.GazeEnter += HandleGazeEnter;
+		io.GazeExit += HandleGazeExit;
 		io.Press += HandleManipulate;
 	}
 
@@ -23,5 +27,15 @@ public class ManipulableObject : MonoBehaviour {
 			PlayerManager.instance.currentObject = transform.gameObject;
 			PlayerManager.instance.currentObject.GetComponentInChildren<Collider>().gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 		}
+	}
+
+	void HandleGazeEnter()
+	{
+		LabelManager.instance.ShowLabel(transform.position, labelText);
+	}
+
+	void HandleGazeExit()
+	{
+		LabelManager.instance.HideLabel();
 	}
 }
