@@ -7,6 +7,12 @@ public class ManipulableObject : MonoBehaviour {
 
 	public string labelText;
 
+	public float outlineWidth = 0.02f;
+
+	private Material material;
+
+	private AudioSource audioSrc;
+
 	void Awake()
 	{
 		InteractableObject io = GetComponent<InteractableObject>();
@@ -14,6 +20,12 @@ public class ManipulableObject : MonoBehaviour {
 		io.GazeEnter += HandleGazeEnter;
 		io.GazeExit += HandleGazeExit;
 		io.Press += HandleManipulate;
+
+		material = GetComponentInChildren<Renderer>().material;
+
+		material.SetFloat("_OutlineWidth", 0.0f);
+
+		audioSrc = GetComponent<AudioSource>();
 	}
 
 	void HandleManipulate(RaycastHit hit)
@@ -32,10 +44,16 @@ public class ManipulableObject : MonoBehaviour {
 	void HandleGazeEnter()
 	{
 		LabelManager.instance.ShowLabel(transform.position, labelText);
+
+		material.SetFloat("_OutlineWidth", outlineWidth);
+
+		audioSrc.Play();
 	}
 
 	void HandleGazeExit()
 	{
 		LabelManager.instance.HideLabel();
+
+		material.SetFloat("_OutlineWidth", 0.0f);
 	}
 }

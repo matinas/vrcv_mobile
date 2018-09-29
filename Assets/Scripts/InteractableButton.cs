@@ -11,6 +11,8 @@ public class InteractableButton : MonoBehaviour {
 
 	private Button button;
 
+	private AudioSource audioSrc;
+
     void Awake()
 	{
 		io = GetComponent<InteractableObject>();
@@ -21,6 +23,8 @@ public class InteractableButton : MonoBehaviour {
 		io.Release += HandleButtonRelease;
 
 		button = GetComponent<Button>();
+
+		audioSrc = GetComponent<AudioSource>();
 	}
 
 	void HandleButtonGazeEnter()
@@ -36,6 +40,8 @@ public class InteractableButton : MonoBehaviour {
 	void HandleButtonPress(RaycastHit hit)
 	{
 		button.SendMessage("OnPointerDown", new PointerEventData(EventSystem.current));
+
+		audioSrc.Play();
 	}
 
 	void HandleButtonRelease()

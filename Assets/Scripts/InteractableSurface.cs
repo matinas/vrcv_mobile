@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(InteractableObject))]
+[RequireComponent(typeof(AudioSource))]
 public class InteractableSurface : MonoBehaviour {
 
 	public GameObject player;
@@ -12,6 +13,8 @@ public class InteractableSurface : MonoBehaviour {
 	private bool firstRotation;
 	private Vector3 iniRotation;
 
+	private AudioSource audioSrc;
+
 	void Awake()
 	{
 		InteractableObject io = GetComponent<InteractableObject>();
@@ -20,6 +23,8 @@ public class InteractableSurface : MonoBehaviour {
 		io.Gaze += HandleGaze;
 
 		firstRotation = true;
+
+		audioSrc = GetComponent<AudioSource>();
 	}
 
 	void HandleButtonPress (RaycastHit hit)
@@ -68,6 +73,8 @@ public class InteractableSurface : MonoBehaviour {
 	{
 		GameObject go = GameObject.Instantiate(item,creationHitPos,Quaternion.identity);
 		PlayerManager.instance.creationMenu.SetActive(false);
+
+		audioSrc.Play();
 	}
 
 	void ShowCreationMenu(RaycastHit hit)
