@@ -1,2 +1,2 @@
 # vrcv_mobile
-Just a simplified VR version of my CV for mobile VR (Google Cardboard/Daydream)
+Just a simple object interaction scene for mobile VR (Google Cardboard/Daydream) featuring different locomotion techniques as well as different ways to interact and manipulate objects
